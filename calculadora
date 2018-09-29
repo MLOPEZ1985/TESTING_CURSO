@@ -1,76 +1,111 @@
-<!-- Documento HTML-->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" /><!-- Etiqueta para adaptar a @media -->
-  <LINK REL="stylesheet" TYPE="text/css" HREF="estiloscalculadora.css"><!-- Enlace hoja estilos -->
-</head>
-<body>
-<!-- Empieza codigo calculadora html-->
-  <form name="calculator">
-    <h3>Calculadora <a href="#">Internetedadinero.com</a></h3>
-    <p>Haz algun calculo para ver el resultado.</p>
-    <input type="textfield" name="ans" value="">
-    <br>
-    <input type="button" value="1" onClick="document.calculator.ans.value+='1'">
-    <input type="button" value="2" onClick="document.calculator.ans.value+='2'">
-    <input type="button" value="3" onClick="document.calculator.ans.value+='3'">
-    <input type="button" value="+" onClick="document.calculator.ans.value+='+'">
-    <br>
-    <input type="button" value="4" onClick="document.calculator.ans.value+='4'">
-    <input type="button" value="5" onClick="document.calculator.ans.value+='5'">
-    <input type="button" value="6" onClick="document.calculator.ans.value+='6'">
-    <input type="button" value="-" onClick="document.calculator.ans.value+='-'">
-    <br>
-    <input type="button" value="7" onClick="document.calculator.ans.value+='7'">
-    <input type="button" value="8" onClick="document.calculator.ans.value+='8'">
-    <input type="button" value="9" onClick="document.calculator.ans.value+='9'">
-    <input type="button" value="*" onClick="document.calculator.ans.value+='*'">
-    <br>
-    <input type="button" value="0" onClick="document.calculator.ans.value+='0'">
-    <input type="reset" value="c">
-    <input type="button" value="/" onClick="document.calculator.ans.value+='/'">
-    <input type="button" value="=" onClick="document.calculator.ans.value=eval(document.calculator.ans.value)">
-    </form>
-</body>
-</html>
-<!-- Finaliza codigo calculadora html -->
+package calculadora;
+import java.util.Scanner; // Importación de la clase Scanner.
  
+public class TestCalculadora{
+  public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        double res = 0;
+        String operacion;
+        boolean comprobar = false;
  
-<!-- Documento CSS-->
-form {
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  border: solid 1px #c2c2c2;
-  padding-bottom: 10px;
-  margin: auto;
-  background: #fafafa;
+        do{
+            //Verificación de los datos puestos por el usuario del número 1.
+            /* Con matches, hay una condición de que dígitos primero puede
+            poner el usuario, en la condicional tenemos primero que solo se admite los caracteres '+' y '-', pero con la condición de que sea una sola vez o ninguna vez. Después tenemos que se admiten cualquier número del 0 al 9 y que se ponga o 0 veces o más veces, es decir, se pone algo o no se pone nada. Mas otra condición de que solo admite el carácter '.' una o ninguna vez. Seguido del punto, si es que se coloca, se admite cualquier número del 0 al 9 que sea una o más veces.*/
+            String numero1;
+            do {
+                System.out.println("\n Por favor, dame el primer número de la operación. ");
+                numero1 = sc.nextLine();
+            } while (!numero1.matches("[+-]?[\\d]*[.]?[\\d]+"));
+            double nume1 = Double.parseDouble(numero1);
+            double n1 = new Double(numero1);
+            // Fin de la verificación de los datos puestos por el usuario del número 1.
+ 
+            do {
+                System.out.println("\n ¿Que operación desea hacer? (Solo coloque un signo)");
+                System.out.println("Teniendo en cuenta que: \n + = sumar \n - = restar \n"
+                        + " x = multiplicar \n / = dividir \n * = elevar primer número al segundo numero."
+                        + "\n % = residuo");
+            operacion = sc.nextLine();
+                if (operacion.equals("+") || operacion.equals("-") || operacion.equals("x") ||
+                    operacion.equals("X") || operacion.equals("/") || operacion.equals("%") ||
+                    operacion.equals("*")) {
+                    comprobar = true;
+                }else { comprobar = false; }
+            } while (comprobar != true);
+ 
+            // Verificación de los datos puestos por el usuario del número 2.
+            String numero2;
+            do {
+                System.out.println("\n Por favor, dame el segundo número.");
+                numero2 = sc.nextLine();
+            } while (!numero2.matches("[+-]?[\\d]*[.]?[\\d]+"));
+            double nume2 = Double.parseDouble(numero2);
+            double n2 = new Double(numero2);
+            // Fin de la verificación de los datos puestos por el usuario del número 2.
+ 
+            do{
+                comprobar = true;
+                switch(operacion){
+                    case "+":
+                        res = n1 + n2;
+                        break;
+                    case "-":
+                        res = n1 - n2;
+                        break;
+                    case "x":
+                    case "X":
+                        res = n1 * n2;
+                        break;
+                    case "/":
+                        /* Por tal de evitar errores y añadir números complejos, si el usuario coloca 0 como segundo número, se piensa entonces que el denominador es 0, y por ello añado una condicional que lo verifique, y para hacer el codigo mas dinamico y no solo añadir un 1, le vuelvo a preguntar al usuario que añada un número distinto, podría volver a colocar 0, y es la razón por la que se encuentra en un ciclo, así que mientras n2 sea 0, el código seguirá ejecutando hasta que ponga otro. */
+                        while(n2 == 0){
+                                 do {
+                                    System.err.println(" En el denominador se encuentra \n"
+                                            + "un cero, para evitar errores coloca otro número.");
+                                    numero2 = sc.nextLine();
+                                }while (!numero2.matches("[+-]?[\\d]*[.]?[\\d]+"));
+                                    nume2 = Double.parseDouble(numero2);
+                                    n2 = new Double(numero2);
+                        }
+                        res = n1 / n2;
+                        break;
+                    case "*":
+                        res = Math.pow(n1, n2);
+                        break;
+                    case "%":
+                        while(n2 == 0){
+                                 do {
+                                    System.err.println(" En el denominador se encuentra \n"
+                                            + "un cero, para evitar errores coloca otro número.");
+                                    numero2 = sc.nextLine();
+                                }while (!numero2.matches("[+-]?[\\d]*[.]?[\\d]+"));
+                                    nume2 = Double.parseDouble(numero2);
+                                    n2 = new Double(numero2);
+                        }
+                        res = n1 % n2;
+                        break;
+                }
+            }while(comprobar != true);
+ 
+            System.out.println("(" + numero1 + ") " + operacion + " (" + numero2 + ")" + " = " + res);
+            System.out.println("\n ¿Desea hacer alguna otra operación? \n");
+            System.out.println(" [s/n]");
+            do{
+                comprobar = true;
+                operacion = sc.nextLine();
+ 
+                switch (operacion) {
+                    case "s":
+                    case "S":
+                    case "n":
+                    case "N":
+                        break;
+                    default:
+                        System.err.println("\n Error, ponga un literal valido. \n");
+                        comprobar = false;
+                }
+            }while(comprobar != true);
+        }while(operacion.equals("s") || operacion.equals("S"));
+  }
 }
-input[type=textfield] {
-    width: 75%;
-    padding: 16px 32px;
-    font-size: 16px;
-    margin: 8px 0;
-    border: 1px solid silver;
-    border-radius: 1px;
-    text-align: left;
-    color: #333;
-    background: #ccc;
-}
-input[type=button], input[type=submit], input[type=reset] {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 16px 32px;
-    font-size: 16px;
-    min-width: 21%;
-    text-decoration: none;
-    margin: 4px 2px;
-    cursor: pointer;
-}
-input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
-  background-color: #333;
-}
-<!-- Finaliza codigo calculadora CSS-->
